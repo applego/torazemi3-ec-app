@@ -2,30 +2,40 @@ import { signInAction } from './actions';
 import { push } from 'connected-react-router';
 import { auth, db, FirebaseTimestamp } from '../../firebase/index';
 
-export const signIn = () => {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const isSignedIn = state.users.isSigndIn
-
-    if (!isSignedIn) {
-      // 一旦　非同期処理仮
-      // const url = 'https://api.github.com/users/deatiger';
-      const url = 'https://api.github.com/users/applego';
-
-      const response = await fetch(url)
-        .then(res => res.json())
-        .catch(() => null);
-
-      const username = response.login;
-
-      dispatch(signInAction({
-        isSignedIn: true,
-        uid: "00001",
-        username: username
-      }));
-      dispatch(push('/'));
+export const signIn = (email, password) => {
+  return async (dispatch) => {
+    // Validation
+    if (email === "" || password === "") {
+      alert("必須項目が未入力です");
+      return false;
     }
-  }
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(result => {
+        const user = result.user;
+
+        if (!user) {
+          throw new Error('ユーザーIDを取得できません');
+        }
+        const uid = user.uid;
+
+        db.collection('users').doc(uid).get()
+          .then(snapshot => {
+            const data = snapshot.data();
+            debugger;
+            dispatch(signInAction({
+              isSignedIn: true,
+              role: data.role,
+              uid: uid,
+              username: data.username
+            }));
+            dispatch(push('/'));
+          });
+      })
+      .catch(error => {
+        alert(error.message);
+      });
+  };
 }
 
 export const signUp = (username, email, password, confirmPassword) => {
@@ -64,5 +74,5 @@ export const signUp = (username, email, password, confirmPassword) => {
             });
         }
       });
-  }
+  };
 }
