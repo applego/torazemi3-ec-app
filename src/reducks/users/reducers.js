@@ -11,6 +11,10 @@ export const UsersReducer = (state = initialState.users, action) => {
   // username: action.payload.username
         ...action.payload
       }
+    case Actions.SIGN_OUT:
+      return {
+        ...action.payload
+      }
     default:
       return state
   }
