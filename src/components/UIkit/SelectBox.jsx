@@ -1,68 +1,45 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+import { MenuItem } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    marginBotton: 16,
+    minWidth: 128,
+    width: '100%',
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+});
 
 /**
- * @props helpertext
- * @props id
  * @props label
- * @props name
  * @props onChange function
- * @props options
+ * @props options {id:,name:}
+ * @props required
  * @props value
  */
 const SelectBox = (props) => {
   const classes = useStyles();
-  // const [state, setState] = React.useState({
-  //   age: '',
-  //   name: 'hai',
-  // });
-
-  // const handleChange = (event) => {
-  //   const name = event.target.name;
-  //   setState({
-  //     ...state,
-  //     [name]: event.target.value,
-  //   });
-  // };
-  const name = props.name;
-  const id = props.id;
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor='age-native-helper'>{props.label}</InputLabel>
-        <NativeSelect
+        <InputLabel>{props.label}</InputLabel>
+        <Select
+          required={props.required}
           value={props.value}
-          onChange={props.onChange}
-          inputProps={{
-            name: name,
-            id: id,
-          }}
+          onChange={(event) => props.select(event.target.value)}
         >
-          <option aria-label='None' value='' />
           {props.options.map((option) => {
+            console.log(option.id);
             return (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
+              <MenuItem key={option.id} value={option.id}>
+                {option.name}
+              </MenuItem>
             );
           })}
-        </NativeSelect>
-        <FormHelperText>{props.helpertext}</FormHelperText>
+        </Select>
       </FormControl>
     </div>
   );
