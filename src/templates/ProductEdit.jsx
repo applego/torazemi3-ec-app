@@ -1,13 +1,21 @@
 // import React from 'react';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ImageArea from '../components/Products/ImageArea';
 import { PrimaryButton, SelectBox, TextInput } from '../components/UIkit';
+import { db } from '../firebase';
 import { saveProduct } from '../reducks/products/operations';
 
 const ProductEdit = () => {
   const dispatch = useDispatch();
+  let id = window.location.pathname.split('/product/edit')[1];
+  console.log('Before split / ', id);
+
+  if (id !== '') {
+    id = id.split('/')[1];
+    console.log('After split / ', id);
+  }
 
   const [name, setName] = useState(''),
     [description, setDescription] = useState(''),
@@ -48,6 +56,26 @@ const ProductEdit = () => {
     { id: 'male', name: 'メンズ' },
     { id: 'female', name: 'レディース' },
   ];
+
+  // useEffect はreturn の直前に書く(torazeiさん)
+  useEffect(() => {
+    if (id !== '') {
+      db.collection('products')
+        .doc(id)
+        .get()
+        .then((doc) => {
+          const data = doc.data();
+          if (!data) return false;
+          console.log(data);
+          setName(data.name);
+          setDescription(data.description);
+          setCategory(data.category);
+          setGender(data.gender);
+          setImages(data.images);
+          setPrice(data.price);
+        });
+    }
+  }, [id]); // 次の商品次の商品と移動する時はidなどを入れないとおかしくなる
 
   return (
     <section>
@@ -104,7 +132,15 @@ const ProductEdit = () => {
             label={'商品情報を保存'}
             onClick={() =>
               dispatch(
-                saveProduct(name, description, category, gender, price, images)
+                saveProduct(
+                  id,
+                  name,
+                  description,
+                  category,
+                  gender,
+                  price,
+                  images
+                )
               )
             }
           />
