@@ -49,7 +49,7 @@ const ImageArea = (props) => {
       props.setImages(newImages);
       return storage.ref('images').child(id).delete();
     },
-    [props.images]
+    [props.images] // これがないと他の画像を削除するバグが起こるらしい
   );
 
   return (
