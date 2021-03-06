@@ -32,7 +32,6 @@ const SelectBox = (props) => {
           onChange={(event) => props.select(event.target.value)}
         >
           {props.options.map((option) => {
-            console.log(option.id);
             return (
               <MenuItem key={option.id} value={option.id}>
                 {option.name}
