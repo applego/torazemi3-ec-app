@@ -33,25 +33,65 @@ const SetSizeArea = ({ sizes, setSizes }) => {
   const [index, setIndex] = useState(0),
     [size, setSize] = useState(''),
     [quantity, setQuantity] = useState(0);
+  const [isErrorSize, setIsErrorSize] = useState(false),
+    [errorSizeHelperText, setErrorSizeHelperText] = useState(''),
+    [isErrorQuantity, setIsErrorQuantity] = useState(false),
+    [errorQuantityHelperText, setErrorQuantityHelperText] = useState('');
 
   const inputSize = useCallback(
     (event) => {
-      setSize(event.target.value);
+      const newSize = event.target.value.toUpperCase();
+      if (sizes.find((item) => item.size === newSize)) {
+        setIsErrorSize(true);
+        console.log('find');
+        setErrorSizeHelperText('すでに存在しています。');
+      } else {
+        console.log('findv');
+        setIsErrorSize(false);
+        setErrorSizeHelperText('');
+      }
+      setSize(newSize);
     },
     [setSize]
   );
   const inputQuantity = useCallback(
     (event) => {
+      if (parseInt(event.target.value) < 0) {
+        setIsErrorQuantity(true);
+        setErrorQuantityHelperText('正の値を入力してください。');
+      } else {
+        setIsErrorQuantity(false);
+        setErrorQuantityHelperText('');
+      }
       setQuantity(event.target.value);
     },
     [setQuantity]
   );
 
-  const addSize = (index, size, quantity) => {
+  const isValid = (size, quantity, type) => {
     if (size === '' || quantity === '') {
+      alert('未入力の項目が存在します。');
       return false;
     }
-    if (index === sizes.length) {
+    if (parseInt(quantity) < 0) {
+      alert('数量はマイナスの値にできません。');
+      return false;
+    }
+    if (type === 'add') {
+      if (sizes.find((item) => item.size === size)) {
+        alert('すでに存在しています。');
+        return false;
+      }
+    }
+  };
+
+  const addSize = (index, size, quantity) => {
+    const type = index === sizes.length ? 'add' : 'edit';
+    if (!isValid(size, quantity, type)) {
+      return false;
+    }
+
+    if (type === 'add') {
       setSizes((prepState) => [
         ...prepState,
         { size: size, quantity: quantity },
@@ -134,6 +174,8 @@ const SetSizeArea = ({ sizes, setSizes }) => {
             rows={1}
             value={size}
             type={'text'}
+            error={isErrorSize}
+            helperText={errorSizeHelperText}
           />
           <TextInput
             fullWidth={false}
@@ -144,6 +186,8 @@ const SetSizeArea = ({ sizes, setSizes }) => {
             rows={1}
             value={quantity}
             type={'number'}
+            error={isErrorQuantity}
+            helperText={errorQuantityHelperText}
           />
         </div>
         <IconButton
