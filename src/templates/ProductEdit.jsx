@@ -11,11 +11,9 @@ import { saveProduct } from '../reducks/products/operations';
 const ProductEdit = () => {
   const dispatch = useDispatch();
   let id = window.location.pathname.split('/product/edit')[1];
-  console.log('Before split / ', id);
 
   if (id !== '') {
     id = id.split('/')[1];
-    console.log('After split / ', id);
   }
 
   const [name, setName] = useState(''),
