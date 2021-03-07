@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { SetSizeArea } from '../components/Products';
 import ImageArea from '../components/Products/ImageArea';
 import { PrimaryButton, SelectBox, TextInput } from '../components/UIkit';
 import { db } from '../firebase';
@@ -22,8 +23,8 @@ const ProductEdit = () => {
     [category, setCategory] = useState(''),
     [gender, setGender] = useState(''),
     [images, setImages] = useState([]),
-    [price, setPrice] = useState('');
-
+    [price, setPrice] = useState(''),
+    [sizes, setSizes] = useState([]);
   // setName をそのまま使わずラップする
   const inputName = useCallback(
     (event) => {
@@ -71,8 +72,9 @@ const ProductEdit = () => {
           setDescription(data.description);
           setCategory(data.category);
           setGender(data.gender);
-          setImages(data.images);
+          setImages(data.images || []); // 追加したプロパティがundefinedになる
           setPrice(data.price);
+          setSizes(data.sizes || []);
         });
     }
   }, [id]); // 次の商品次の商品と移動する時はidなどを入れないとおかしくなる
@@ -126,7 +128,9 @@ const ProductEdit = () => {
           type={'number'}
           onChange={inputPrice}
         />
-        <div className='module-spacer--medium'></div>
+        <div className='module-spacer--small'></div>
+        <SetSizeArea sizes={sizes} setSizes={setSizes} />
+        <div className='module-spacer--small'></div>
         <div className='center'>
           <PrimaryButton
             label={'商品情報を保存'}
@@ -139,7 +143,8 @@ const ProductEdit = () => {
                   category,
                   gender,
                   price,
-                  images
+                  images,
+                  sizes
                 )
               )
             }
