@@ -17,6 +17,7 @@ export default function createStore(history) {
     combineReducers({
       router: connectRouter(history),
       users: UsersReducer,
+      products: ProductsReducer,
     }),
     applyMiddleware(routerMiddleware(history), thunk)
   );
