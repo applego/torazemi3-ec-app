@@ -60,7 +60,7 @@ const ProductEdit = () => {
   useEffect(() => {
     if (id !== '') {
       db.collection('products')
-        .doc(id)
+        .doc(String(id))
         .get()
         .then((doc) => {
           const data = doc.data();

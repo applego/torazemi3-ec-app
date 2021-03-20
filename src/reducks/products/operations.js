@@ -46,13 +46,13 @@ export const saveProduct = (
 
     if (id === '') {
       const ref = productsRef.doc();
-      const id = ref.id;
+      id = ref.id;
       data.id = id;
       data.created_at = timestamp;
     }
 
     return productsRef
-      .doc(id)
+      .doc(String(id))
       .set(data, { merge: true }) // 変更があった部分を更新
       .then(() => {
         dispatch(push('/'));
