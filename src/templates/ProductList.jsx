@@ -1,3 +1,5 @@
+import { Add } from '@material-ui/icons';
+import { push } from 'connected-react-router';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductCard } from '../components/Products';
@@ -27,6 +29,9 @@ const ProductList = () => {
               price={product.price}
             />
           ))}
+      </div>
+      <div>
+        <Add onClick={() => dispatch(push('/product/edit'))}></Add>
       </div>
     </section>
   );
