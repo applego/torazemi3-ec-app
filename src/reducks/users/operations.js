@@ -9,7 +9,7 @@ export const listenAuthState = () => {
     return auth.onAuthStateChanged((user) => {
       console.log(user);
       if (user) {
-        usersRef.doc(user.uid).onSnapshot((snapshot) => {
+        usersRef.doc(String(user.uid)).onSnapshot((snapshot) => {
           console.log(snapshot);
           const data = snapshot.data();
           if (!data) {
@@ -98,7 +98,7 @@ export const signIn = (email, password) => {
         const uid = user.uid;
 
         db.collection('users')
-          .doc(uid)
+          .doc(String(uid))
           .get()
           .then((snapshot) => {
             const data = snapshot.data();
@@ -159,7 +159,7 @@ export const signUp = (username, email, password, confirmPassword) => {
           };
 
           return usersRef
-            .doc(uid)
+            .doc(String(uid))
             .set(userInitialData)
             .then(async () => {
               // const sendThankYouMail = functions.httpsCallable('sendThankYouMail');
