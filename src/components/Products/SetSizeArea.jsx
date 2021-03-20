@@ -83,6 +83,7 @@ const SetSizeArea = ({ sizes, setSizes }) => {
         return false;
       }
     }
+    return true;
   };
 
   const addSize = (index, size, quantity) => {
@@ -131,10 +132,12 @@ const SetSizeArea = ({ sizes, setSizes }) => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableCell>サイズ</TableCell>
-            <TableCell>数量</TableCell>
-            <TableCell className={classes.iconCell}></TableCell>
-            <TableCell className={classes.iconCell}></TableCell>
+            <TableRow>
+              <TableCell>サイズ</TableCell>
+              <TableCell>数量</TableCell>
+              <TableCell className={classes.iconCell}></TableCell>
+              <TableCell className={classes.iconCell}></TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {sizes.length > 0 &&
