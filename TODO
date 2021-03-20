@@ -1,3 +1,5 @@
 
 Todo:
   ☐ FireStoreへの2人目の登録が失敗する問題
+  □ 商品の保存(SaveProduct)の入力チェック（必須項目）
+    Presentation層としてよいのでは

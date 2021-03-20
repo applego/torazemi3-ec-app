@@ -1,24 +1,8 @@
 import { push } from 'connected-react-router';
 import { db, FirebaseTimestamp } from '../../firebase';
-import { fetchProductsAction } from './actions';
+import { deleteProductAction, fetchProductsAction } from './actions';
 
 const productsRef = db.collection('products');
-
-export const fetchProducts = () => {
-  return async (dispatch) => {
-    productsRef
-      .orderBy('updated_at', 'desc')
-      .get()
-      .then((snapshots) => {
-        const productList = [];
-        snapshots.forEach((snapshot) => {
-          const product = snapshot.data();
-          productList.push(product);
-        });
-        dispatch(fetchProductsAction(productList));
-      });
-  };
-};
 
 export const saveProduct = (
   id,
@@ -59,6 +43,37 @@ export const saveProduct = (
       })
       .catch((error) => {
         throw new Error(error);
+      });
+  };
+};
+
+export const fetchProducts = () => {
+  return async (dispatch) => {
+    productsRef
+      .orderBy('updated_at', 'desc')
+      .get()
+      .then((snapshots) => {
+        const productList = [];
+        snapshots.forEach((snapshot) => {
+          const product = snapshot.data();
+          productList.push(product);
+        });
+        dispatch(fetchProductsAction(productList));
+      });
+  };
+};
+
+export const deleteProduct = (id) => {
+  return async (dispatch, getState) => {
+    productsRef
+      .doc(String(id))
+      .delete()
+      .then(() => {
+        const prevProducts = getState().products.list;
+        const nextProducts = prevProducts.filter(
+          (product) => product.id !== id
+        );
+        dispatch(deleteProductAction(nextProducts));
       });
   };
 };
