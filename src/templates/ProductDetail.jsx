@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ImageSwiper } from '../components/Products';
+import { ImageSwiper, SizeTable } from '../components/Products';
 import { db } from '../firebase';
 import { returnCodeToBr } from '../function/common';
 
@@ -66,6 +66,7 @@ const ProductDetail = () => {
             <p className={classes.price}>¥{product.price.toLocaleString()}</p>
             <div className='module-spacer--small' />
             <div className='module-spacer--small' />
+            <SizeTable productId={product.id} sizes={product.sizes} />
             <p>{returnCodeToBr(product.description)}</p>
           </div>
         </div>
