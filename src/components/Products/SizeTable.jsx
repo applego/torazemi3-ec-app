@@ -19,6 +19,7 @@ const useStyles = makeStyles({
     float: 'right',
   },
   iconCell: {
+    padding: 0,
     height: 48,
     width: 48,
   },
@@ -48,17 +49,22 @@ const SizeTable = ({ productId, sizes }) => {
               sizes.map((item, i) => {
                 return (
                   <TableRow key={item.size}>
-                    <TableCell>{item.size}</TableCell>
+                    <TableCell component='th' scope='row'>
+                      {item.size}
+                    </TableCell>
                     <TableCell>残り {item.quantity} 点</TableCell>
-                    <TableCell>
-                      <IconButton
-                        className={classes.iconCell}
-                        onClick={() =>
-                          addToShoppingCart(item.size, item.quantity)
-                        }
-                      >
-                        <ShoppingCartIcon />
-                      </IconButton>
+                    <TableCell className={classes.iconCell}>
+                      {item.quantity > 0 ? (
+                        <IconButton
+                          onClick={() =>
+                            addToShoppingCart(item.size, item.quantity)
+                          }
+                        >
+                          <ShoppingCartIcon />
+                        </IconButton>
+                      ) : (
+                        <div>売切</div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <IconButton
