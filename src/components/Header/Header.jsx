@@ -1,28 +1,15 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { fade, makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import logo from '../../assets/img/icons/logo.png';
 
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import History from '@material-ui/icons/History';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsSignedIn } from '../../reducks/users/selectors';
 import { push } from 'connected-react-router';
-import { HeaderMenus } from '.';
+import { HeaderMenus, ClosableDrawer } from '.';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +35,20 @@ const Header = () => {
   const selector = useSelector((state) => state);
   const isSignedIn = getIsSignedIn(selector);
 
+  const [open, setOpen] = useState(false);
+  const handleDrawerToggle = useCallback(
+    (event) => {
+      if (
+        event.type === 'keydown' &&
+        (event.key === 'Tab' || event.key === 'Shift')
+      ) {
+        return;
+      }
+      setOpen(!open);
+    },
+    [setOpen, open]
+  );
+
   return (
     <div className={classes.root}>
       <AppBar position='fixed' className={classes.menuBar}>
@@ -60,11 +61,12 @@ const Header = () => {
           />
           {isSignedIn && (
             <div className={classes.iconButtons}>
-              <HeaderMenus />
+              <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
             </div>
           )}
         </Toolbar>
       </AppBar>
+      <ClosableDrawer open={open} onClose={handleDrawerToggle} />
     </div>
   );
 };
